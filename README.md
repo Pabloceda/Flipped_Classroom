@@ -20,5 +20,5 @@ El aula invertida es un modelo pedagógico que transfiere el trabajo de determin
 Este proyecto está en desarrollo activo.
 
 ---
-**Autor:** Pablo Ceda  
+**Autor:** Pablo Calderón
 **Institución:** ILERNA - 2º Curso
