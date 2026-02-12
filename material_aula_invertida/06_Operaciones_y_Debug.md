@@ -149,12 +149,10 @@ Diagnosticar un problema es más fácil si se conocen las **herramientas adecuad
 
 **Métricas clave a vigilar:**
 
-- **Tasa de error** (4xx, 5xx): <1% ideal, >5% crítico
-- **Latencia P95**: <200ms web, <500ms API
-- **Throughput**: requests/segundo sostenidos
-- **Uso CPU/RAM**: <70% normal, >90% investigar
-- **Conexiones activas**: comparar con `worker_connections` configurado
-- **Cache hit ratio**: >80% ideal para CDN
+- **Latencia** (Latency): Tiempo que tarda en servir una petición.
+- **Tráfico** (Traffic): Demanda del sistema (stats de requests/seg).
+- **Errores** (Errors): Tasa de fallos (códigos 5xx).
+- **Saturación** (Saturation): Cuan "lleno" está el servicio (uso CPU/RAM).
 
 ---
 

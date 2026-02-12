@@ -910,18 +910,65 @@ http {
 
 ```nginx
 http {
-    # Log cuando se aplica rate limit
-    limit_req_log_level warn;  # Default: error
-    
     # O desactivar logging de rate limits
     limit_req_log_level info;
 }
 ```
 
+> [!TIP]
+> **Pro Tip: WAF (Web Application Firewall)**
+> El *Rate Limiting* protege contra el *volumen* de peticiones, pero no contra el *contenido* malicioso (SQL Injection, XSS). Para una protección completa, en entornos corporativos se suele combinar Nginx con un **WAF** como **ModSecurity** o **NixArmor**. Estos analizan el cuerpo de la petición y bloquean ataques específicos antes de que lleguen a tu aplicación.
+
 
 ---
 
-### 5.9 Escaneo de Vulnerabilidades en Imágenes Docker
+---
+
+### 5.9 CORS y Preflight Requests
+
+#### El Problema del "Same-Origin Policy"
+Por seguridad, los navegadores bloquean por defecto las peticiones AJAX/Fetch a un dominio diferente al de la página web.
+- Si tu frontend está en `frontend.com` y pide datos a `api.backend.com`, el navegador **bloqueará** la respuesta.
+
+#### Preflight Requests (OPTIONS)
+Antes de hacer la petición real (GET, POST), el navegador envía una petición "previa" de tipo **OPTIONS** para preguntar al servidor: *"¿Me das permiso para acceder?"*.
+- Si el servidor no responde 200 OK a este OPTIONS, la petición real nunca se envía.
+
+#### Configuración CORS en Nginx
+Para permitir CORS, debemos añadir encabezados específicos (`Access-Control-Allow-*`) y manejar el método OPTIONS.
+
+```nginx
+location /api/ {
+    # 1. Permitir origen específico (NO usar '*' en producción con credenciales)
+    add_header 'Access-Control-Allow-Origin' 'https://mi-frontend.com' always;
+    
+    # 2. Métodos permitidos
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT' always;
+    
+    # 3. Headers permitidos (Content-Type, Auth, etc.)
+    add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization' always;
+    
+    # 4. Manejo del Preflight (OPTIONS)
+    if ($request_method = 'OPTIONS') {
+        # Responder 204 No Content (pero con los headers de arriba)
+        add_header 'Access-Control-Allow-Origin' 'https://mi-frontend.com' always;
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT' always;
+        add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization' always;
+        
+        # Cachear la respuesta preflight por 24h
+        add_header 'Access-Control-Max-Age' 1728000;
+        add_header 'Content-Type' 'text/plain; charset=utf-8';
+        add_header 'Content-Length' 0;
+        return 204;
+    }
+    
+    proxy_pass http://backend;
+}
+```
+
+---
+
+### 5.10 Escaneo de Vulnerabilidades en Imágenes Docker
 
 Hasta ahora hemos asegurado la **configuración de Nginx**: cifrado, redirección, autenticación, control de acceso e incluso limitación de peticiones. Pero la seguridad no termina ahí. La propia **imagen Docker** que contiene Nginx incluye un sistema operativo base y librerías que pueden tener vulnerabilidades conocidas. El último paso para asegurar nuestra infraestructura es **escanear esas imágenes** antes de desplegarlas en producción.
 

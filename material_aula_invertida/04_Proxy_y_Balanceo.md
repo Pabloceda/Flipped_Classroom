@@ -261,6 +261,15 @@ location / {
 - Backend necesita saber el hostname original para virtual hosting
 - Sin esto, backend podría responder con host incorrecto
 
+**El "Baile de Cabeceras" (Visualización)**:
+> Imagina que `ejemplo.com` es una etiqueta en la camisa del cliente.
+> 1. **Cliente** llega a Nginx con la etiqueta `Host: ejemplo.com`.
+> 2. **Nginx** se gira para hablar con el Backend (localhost:3000). Si no le pasamos la etiqueta, Nginx se presentará como "localhost".
+> 3. **Backend** genera un link. Como cree que se llama "localhost", genera `http://localhost:3000/perfil`.
+> 4. **Cliente** recibe ese link roto y el sitio falla.
+>
+> **Solución**: `proxy_set_header Host $host;` le pega la etiqueta original al backend para que sepa quién es realmente.
+
 **2. `X-Real-IP`**:
 
 - IP del cliente final
