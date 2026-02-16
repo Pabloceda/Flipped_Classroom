@@ -287,19 +287,19 @@ Nginx utiliza una **arquitectura asíncrona, no-bloqueante, basada en eventos** 
 
 #### Comparación: Apache vs Nginx
 
+
+
 **Apache (MPM Prefork/Worker)**:
 
-```
-┌─────────────────────────────────────┐
-│      Apache Master Process          │
-└────────────┬────────────────────────┘
-             │
-    ┌────────┴────────┐
-    │  Worker         │  Worker         │  Worker
-    │  Process/Thread │  Process/Thread │  Process/Thread
-    │  ↓              │  ↓              │  ↓
-    │  Connection 1   │  Connection 2   │  Connection 3
-    └─────────────────┴─────────────────┴─────────────────┘
+```mermaid
+graph TD
+    Master[Apache Master Process] -->|Inicia| W1[Worker Process/Thread]
+    Master -->|Inicia| W2[Worker Process/Thread]
+    Master -->|Inicia| W3[Worker Process/Thread]
+    
+    W1 -->|Atiende| C1[Connection 1]
+    W2 -->|Atiende| C2[Connection 2]
+    W3 -->|Atiende| C3[Connection 3]
 ```
 
 - **1 thread/proceso = 1 conexión**
@@ -308,21 +308,15 @@ Nginx utiliza una **arquitectura asíncrona, no-bloqueante, basada en eventos** 
 
 **Nginx (Event-Driven)**:
 
-```
-┌──────────────────────────────────────────────┐
-│         Master Process                       │
-│  (gestión, configuración, señales)           │
-└────────────┬─────────────────────────────────┘
-             │
-    ┌────────┴──────────┬───────────────┐
-    │  Worker 1         │  Worker 2     │  Worker N
-    │  (Event Loop)     │  (Event Loop) │  (Event Loop)
-    │  ↓                │               │
-    │  ┌─────────────┐  │               │
-    │  │ Connections │  │               │
-    │  │ [1..1000+]  │  │               │
-    │  └─────────────┘  │               │
-    └───────────────────┴───────────────┴─────────┘
+```mermaid
+graph TD
+    Master[Master Process] -->|Gestión/Señales| W1[Worker 1]
+    Master -->|Gestión/Señales| W2[Worker 2]
+    Master -->|Gestión/Señales| WN[Worker N]
+    
+    subgraph EventLoop [Worker 1 Event Loop]
+        W1 -->|Maneja| C[Conexiones 1..1000+]
+    end
 ```
 
 - **1 worker = miles de conexiones**
@@ -342,27 +336,29 @@ Esto es exactamente lo que hace el **event loop** de Nginx: un worker atiende mi
 
 **Ciclo del Event Loop (simplificado)**:
 
-```
-┌─────────────────────────────────────────────────┐
-│  while (servidor encendido):                    │
-│                                                 │
-│    1. Esperar eventos (¿alguien tiene datos?)   │
-│                          ↓                      │
-│    2. Para cada conexión con datos listos:       │
-│       - Si datos del cliente → leer petición    │
-│       - Si respuesta del backend → reenviar     │
-│       - Si listo para escribir → enviar HTML    │
-│                          ↓                      │
-│    3. Volver a 1 (nunca se bloquea)             │
-└─────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    A[Inicio: Servidor Encendido] --> B{1. Esperar eventos}
+    B -- ¿Datos listos? --> C[2. Procesar conexión]
+    
+    C --> D{Tipo de evento}
+    D -- Petición Cliente --> E[Leer petición]
+    D -- Respuesta Backend --> F[Reenviar]
+    D -- Listo para escribir --> G[Enviar HTML]
+    
+    E --> H[3. Volver al inicio]
+    F --> H
+    G --> H
+    H --> B
 ```
 
 **Flujo de una petición HTTP**:
 
-```
-Leer petición → Procesar → Consultar backend (si hay) → 
-Enviar respuesta → Mantener conexión o cerrar
-```
+1. Leer petición
+2. Procesar
+3. Consultar backend (si es necesario)
+4. Enviar respuesta
+5. Mantener conexión o cerrar
 
 
 #### Ventajas del Modelo Event-Driven

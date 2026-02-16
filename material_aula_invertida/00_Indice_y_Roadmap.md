@@ -11,7 +11,6 @@
 | `05_Seguridad_Hardening.md` | Módulo 5 | HTTPS/TLS, Rate Limiting, WAF, Hardening |
 | `06_Operaciones_y_Debug.md` | Módulo 6 | Troubleshooting, Herramientas, Golden Signals |
 | `07_Laboratorio_Practico.md` | Laboratorio | Casos de uso reales y Scripts |
-| `guia_profesor/` | Recursos Docentes | Guía didáctica, metodología y tiempos |
 
 ---
 
