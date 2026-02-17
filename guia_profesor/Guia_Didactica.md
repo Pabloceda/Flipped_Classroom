@@ -3,19 +3,20 @@
 ## 1. Metodología de la Sesión
 Esta unidad está diseñada bajo el modelo **Flipped Classroom** (Aula Invertida).
 - **En Casa (Previo)**: Los alumnos deben leerse los Módulos 1, 2 y 3 por su cuenta, para tener los conceptos claros
-- **En Clase**: Se dedica el tiempo a resolver dudas, realizar el laboratorio práctico (Módulo 7) y debatir sobre dudas.
+- **En Clase**: Se dedica el tiempo a resolver dudas, impartir los módulos restantes, realizar algún laboratorio práctico del Módulo 7 y debatir sobre dudas que surjan de los alumnos.
 - **Rol del Docente**: Actuamos como referente de la materia y hacemos de guía en la resolución de problemas, no simplemente leer la información.
+- **Evaluación**: Se realizará una evaluación continua a lo largo de la sesión, observando la participación de los alumnos y su capacidad para resolver los problemas que vayan surgiendo.
 
 ## 2. Cronograma Estimado (Sesión de 4 horas)
 
 | Tiempo | Actividad | Descripción |
 | :--- | :--- | :--- |
-| **00:30 - 01:00** | **Q&A** | Resolución de dudas teóricas. Uso de diagrama en pizarra. |
-| **01:00 - 01:30** | **Live Coding Demo** | El profesor levanta un stack básico (Nginx + PHP/Node) explicando `docker-compose.yml` línea a línea. |
-| **01:30 - 02:30** | **Realización de Actividad 1** | Alumnos realizan "Actividad 1: Balanceo + SSL". |
-| **02:30 - 03:00** | **Errores comunes** | Puesta en común de errores encontrados (`502 Bad Gateway`, permisos). Cierre. |
+| **1 hora y media** | **Q&A y Repaso** | Resolución de dudas teóricas y terminar de impartir ls módulos. Uso de diagramas en la pizarra. |
+| **1 hora** | **Live Coding Demo** | El profesor levanta un stack básico (Nginx + PHP/Node) explicando `docker-compose.yml` línea a línea. |
+| **1 hora** | **Realización de Actividad 1** | Alumnos realizan "Actividad 1: Balanceo + SSL". |
+| **30 minutos** | **Errores comunes** | Puesta en común de errores encontrados (`502 Bad Gateway`, permisos). Cierre. |
 
-## 3. Conceptos Clave (Must-Know)
+## 3. Conceptos Claves
 El alumno **DEBE** entender estos conceptos para validar los conocimientos:
 
 1.  **Modelo de Procesos**: Por qué Nginx (Event-Driven) escala mejor que Apache (Process-Per-Connection) con alta concurrencia.

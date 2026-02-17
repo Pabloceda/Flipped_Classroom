@@ -1,6 +1,8 @@
-## Crierios de correción para las actividades
+# Criterios de Corrección - Actividades Prácticas
 
-### Criterios de Corrección Actividad 1
+## Actividad 1: Stack WordPress con Nginx, MariaDB y Políticas de Seguridad
+
+### Tabla de Criterios
 
 | Criterio | Puntos | Descripción |
 |:---------|:------:|:------------|
@@ -15,15 +17,20 @@
 
 **Puntuación total: 100 puntos**
 
-**Niveles:**
-- **90-100**: Excelente - Todas las políticas implementadas correctamente
-- **75-89**: Notable - Funcional con algunas mejoras menores
-- **60-74**: Aprobado - Funciona pero faltan políticas importantes
-- **< 60**: Suspenso - No cumple requisitos mínimos
+### Niveles de Calificación
+
+| Rango | Calificación | Descripción |
+|:------|:-------------|:------------|
+| **90-100** | Excelente | Todas las políticas implementadas correctamente |
+| **75-89** | Notable | Funcional con algunas mejoras menores |
+| **60-74** | Aprobado | Funciona pero faltan políticas importantes |
+| **< 60** | Suspenso | No cumple requisitos mínimos |
 
 ---
 
-### Criterios de Corrección Actividad 2
+## Actividad 2: Sistema de Balanceo de Carga con Alta Disponibilidad
+
+### Tabla de Criterios
 
 | Criterio | Puntos | Descripción |
 |:---------|:------:|:------------|
@@ -37,7 +44,16 @@
 
 **Puntuación total: 100 puntos**
 
-**Comparativa de algoritmos esperada:**
+### Niveles de Calificación
+
+| Rango | Calificación | Descripción |
+|:------|:-------------|:------------|
+| **90-100** | Excelente | Todos los algoritmos funcionan correctamente con health checks y failover |
+| **75-89** | Notable | Al menos 2 algoritmos funcionales con verificación de distribución |
+| **60-74** | Aprobado | Balanceo básico funcional pero faltan pruebas o algoritmos |
+| **< 60** | Suspenso | No cumple requisitos mínimos de balanceo o health checks |
+
+### Comparativa de Algoritmos (Referencia)
 
 | Algoritmo | Escenario ideal | Sticky Sessions |
 |:----------|:----------------|:----------------|
