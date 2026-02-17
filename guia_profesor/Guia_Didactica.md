@@ -12,9 +12,8 @@ Esta unidad está diseñada bajo el modelo **Flipped Classroom** (Aula Invertida
 | :--- | :--- | :--- |
 | **00:30 - 01:00** | **Q&A** | Resolución de dudas teóricas. Uso de diagrama en pizarra. |
 | **01:00 - 01:30** | **Live Coding Demo** | El profesor levanta un stack básico (Nginx + PHP/Node) explicando `docker-compose.yml` línea a línea. |
-| **01:30 - 02:30** | **Laboratorio Parte 1** | Alumnos realizan "Caso Práctico 1: E-commerce" (Balanceo + SSL). |
-| **02:30 - 03:30** | **Laboratorio Parte 2** | Alumnos realizan "Caso Práctico 2: API Gateway" y pruebas de carga con `ab` o `wrk`. |
-| **03:30 - 04:00** | **Errores comunes** | Puesta en común de errores encontrados (`502 Bad Gateway`, permisos). Cierre. |
+| **01:30 - 02:30** | **Realización de Actividad 1** | Alumnos realizan "Actividad 1: Balanceo + SSL". |
+| **02:30 - 03:00** | **Errores comunes** | Puesta en común de errores encontrados (`502 Bad Gateway`, permisos). Cierre. |
 
 ## 3. Conceptos Clave (Must-Know)
 El alumno **DEBE** entender estos conceptos para validar los conocimientos:

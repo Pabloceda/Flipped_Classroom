@@ -1,5 +1,3 @@
-# Investigación Nginx-Docker (Parte 4)
-
 ## MÓDULO 6: CIERRE, TROUBLESHOOTING Y RECURSOS
 
 A lo largo de los módulos anteriores hemos construido una infraestructura web completa: desde los fundamentos del protocolo HTTP y la arquitectura de Nginx (Módulo 1), pasando por la dockerización del servicio (Módulo 2), la configuración de contenido estático y virtual hosts (Módulo 3), el proxy inverso y balanceo de carga (Módulo 4), hasta la seguridad con HTTPS, rate limiting y escaneo de imágenes (Módulo 5). Este último módulo cierra la investigación con las habilidades que todo administrador necesita en el **día a día**: diagnosticar problemas, conocer las herramientas clave, tener una referencia rápida de comandos y saber por dónde continuar aprendiendo.

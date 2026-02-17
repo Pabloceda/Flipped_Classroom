@@ -1,5 +1,3 @@
-# Investigación Nginx-Docker (Parte 3)
-
 ## MÓDULO 5: SEGURIDAD Y HTTPS
 
 En los módulos anteriores hemos aprendido a servir contenido estático, a configurar Nginx como proxy inverso y a distribuir tráfico entre múltiples backends. Pero toda esa infraestructura es inútil si las comunicaciones no son seguras: sin cifrado, cualquier atacante en la red podría interceptar contraseñas, datos personales o tokens de sesión. Este módulo cubre las **medidas de seguridad esenciales** que todo servidor web en producción debe implementar: desde el cifrado TLS/SSL y la redirección HTTPS, hasta la autenticación, el control de acceso por IP, la protección contra ataques de volumen (rate limiting) y el escaneo de vulnerabilidades en las imágenes Docker.

@@ -1,6 +1,6 @@
-# Índice y Roadmap del Curso
+# Índice del Curso
 
-## Estructura del Curso (Refactorizada)
+## Estructura del Curso
 
 | Archivo | Módulo | Temática Principal |
 |---------|--------|-------------------|
@@ -10,7 +10,7 @@
 | `04_Proxy_y_Balanceo.md` | Módulo 4 | Reverse Proxy, Load Balancing (L7), Upstreams |
 | `05_Seguridad_Hardening.md` | Módulo 5 | HTTPS/TLS, Rate Limiting, WAF, Hardening |
 | `06_Operaciones_y_Debug.md` | Módulo 6 | Troubleshooting, Herramientas, Golden Signals |
-| `07_Laboratorio_Practico.md` | Laboratorio | Casos de uso reales y Scripts |
+| `07_Laboratorio_Practicos.md` | Laboratorio | Casos de uso reales y Scripts |
 
 ---
 

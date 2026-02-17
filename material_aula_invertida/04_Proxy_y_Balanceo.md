@@ -1,5 +1,3 @@
-# Investigación Nginx-Docker (Parte 2)
-
 ## MÓDULO 4: PROXY INVERSO Y BALANCEO
 
 En el Módulo 3 aprendimos a configurar Nginx para servir contenido estático. Pero en la práctica, las aplicaciones web modernas tienen **múltiples componentes**: una app en Node.js, otra en PHP, una base de datos, un servicio de caché... ¿Cómo exponemos todo esto al usuario como si fuera un solo servidor? La respuesta es el **proxy inverso**, y Nginx es una de las mejores herramientas para implementarlo.

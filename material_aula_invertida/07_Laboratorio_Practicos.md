@@ -1,6 +1,4 @@
-# Casos Prácticos de Implementación
-
-## CASOS PRÁCTICOS: ESCENARIOS REALES Y AUTOMATIZACIÓN
+## Módulo 7:CASOS PRÁCTICOS, ESCENARIOS REALES Y AUTOMATIZACIÓN
 
 En los módulos anteriores hemos aprendido los conceptos teóricos: proxy inverso, balanceo de carga (Módulo 4), cifrado TLS, autenticación y rate limiting (Módulo 5). Pero la teoría cobra sentido cuando se aplica a **escenarios reales de producción**. Este documento complementario presenta cuatro casos prácticos completos —con arquitectura, configuración y código funcional— que integran todo lo visto en el curso, seguidos de scripts de automatización para el despliegue y la monitorización.
 
