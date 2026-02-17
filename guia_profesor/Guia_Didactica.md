@@ -2,22 +2,22 @@
 
 ## 1. Metodología de la Sesión
 Esta unidad está diseñada bajo el modelo **Flipped Classroom** (Aula Invertida).
-- **En Casa (Previo)**: Los alumnos deben estudiar los Módulos 1, 2 y 3 por su cuenta.
-- **En Clase**: Se dedica el tiempo a resolver dudas, realizar el laboratorio práctico (Módulo 7) y debatir sobre arquitectura.
-- **Rol del Docente**: Facilitador y "Senior Engineer" que guía en la resolución de problemas, no mero transmisor de información.
+- **En Casa (Previo)**: Los alumnos deben leerse los Módulos 1, 2 y 3 por su cuenta, para tener los conceptos claros
+- **En Clase**: Se dedica el tiempo a resolver dudas, realizar el laboratorio práctico (Módulo 7) y debatir sobre dudas.
+- **Rol del Docente**: Actuamos como referente de la materia y hacemos de guía en la resolución de problemas, no simplemente leer la información.
 
 ## 2. Cronograma Estimado (Sesión de 4 horas)
 
 | Tiempo | Actividad | Descripción |
 | :--- | :--- | :--- |
-| **00:00 - 00:30** | **Q&A Conceptual** | Resolución de dudas teóricas sobre Event-Driven, C10k y capas de Docker. Uso de diagrama en pizarra. |
-| **00:30 - 01:30** | **Live Coding Demo** | El profesor levanta un stack básico (Nginx + PHP/Node) explicando `docker-compose.yml` línea a línea. |
+| **00:30 - 01:00** | **Q&A** | Resolución de dudas teóricas. Uso de diagrama en pizarra. |
+| **01:00 - 01:30** | **Live Coding Demo** | El profesor levanta un stack básico (Nginx + PHP/Node) explicando `docker-compose.yml` línea a línea. |
 | **01:30 - 02:30** | **Laboratorio Parte 1** | Alumnos realizan "Caso Práctico 1: E-commerce" (Balanceo + SSL). |
 | **02:30 - 03:30** | **Laboratorio Parte 2** | Alumnos realizan "Caso Práctico 2: API Gateway" y pruebas de carga con `ab` o `wrk`. |
-| **03:30 - 04:00** | **Retro & Debug** | Puesta en común de errores encontrados (`502 Bad Gateway`, permisos). Cierre. |
+| **03:30 - 04:00** | **Errores comunes** | Puesta en común de errores encontrados (`502 Bad Gateway`, permisos). Cierre. |
 
 ## 3. Conceptos Clave (Must-Know)
-El alumno **DEBE** entender estos conceptos para aprobar:
+El alumno **DEBE** entender estos conceptos para validar los conocimientos:
 
 1.  **Modelo de Procesos**: Por qué Nginx (Event-Driven) escala mejor que Apache (Process-Per-Connection) con alta concurrencia.
 2.  **Inmutabilidad**: Por qué no se editan archivos *dentro* de un contenedor en ejecución (se usan volúmenes o se reconstruye la imagen).
