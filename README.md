@@ -1,6 +1,6 @@
-# 🚀 Flipped Classroom: Despliegue de Servicios Web con Nginx y Docker
+# Flipped Classroom: Instalación y Administración de Servicios Web con Nginx y Docker
 
-Bienvenido al repositorio del proyecto **"Deploy Like a Pro"**, diseñado bajo la metodología **Flipped Classroom (Aula Invertida)** para el módulo de **Servicios de Red e Internet (2º Curso)**.
+Bienvenido al repositorio del proyecto **Flipped Classroom (Aula Invertida)** para el módulo de **Servicios de Red e Internet (2º Curso)**.
 
 Este curso está enfocado en enseñar el despliegue moderno de servidores web, pasando de la instalación tradicional a arquitecturas contenerizadas, seguras y escalables.
 
