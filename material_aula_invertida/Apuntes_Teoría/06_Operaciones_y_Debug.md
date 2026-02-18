@@ -198,59 +198,9 @@ Antes de desplegar en producción, es fundamental verificar que se han aplicado 
 
 ---
 
-### 6.4 Comandos de Referencia Rápida
 
-Para el día a día, resulta muy útil tener un **cheat sheet** con los comandos más frecuentes. A continuación se recogen agrupados por herramienta:
 
-**Docker**:
-
-```bash
-docker build -t my-nginx .                                                  # Build imagen
-docker run -d --name web -p 80:80 -v ./html:/usr/share/nginx/html nginx:alpine  # Run
-docker logs -f web                                                          # Logs
-docker exec -it web sh                                                      # Shell
-docker exec web nginx -t                                                    # Test config
-docker exec web nginx -s reload                                             # Reload
-docker stop web && docker start web                                         # Stop/Start
-docker stats web                                                            # Stats
-```
-
-**Docker Compose**:
-
-```bash
-docker-compose up -d              # Levantar servicios
-docker-compose logs -f nginx      # Ver logs
-docker-compose restart nginx      # Reiniciar servicio
-docker-compose up -d --scale app=3  # Escalar
-docker-compose down               # Detener y eliminar
-docker-compose build               # Reconstruir imágenes
-```
-
-**Nginx**:
-
-```bash
-nginx -t            # Test sintaxis configuración
-nginx -s reload     # Reload sin downtime
-nginx -s stop       # Stop inmediato
-nginx -s quit       # Stop graceful
-nginx -s reopen     # Reopen log files
-nginx -V            # Mostrar config compilada y módulos
-```
-
-**Debugging**:
-
-```bash
-tail -f /var/log/nginx/access.log                          # Peticiones en tiempo real
-tail -f /var/log/nginx/error.log                           # Errores
-curl -I https://ejemplo.com                                # Test endpoint
-curl -H "X-API-Key: test" https://ejemplo.com/api          # Test con headers
-for i in {1..20}; do curl http://ejemplo.com; done          # Test rate limiting
-openssl s_client -connect ejemplo.com:443 -servername ejemplo.com  # Check SSL
-```
-
----
-
-### 6.5 Roadmap de Aprendizaje
+### 6.4 Roadmap de Aprendizaje
 
 Con los conocimientos adquiridos en estos 6 módulos, el alumno tiene una **base sólida** en despliegue y administración de servidores web con Nginx y Docker. A continuación se sugieren los siguientes pasos para profundizar:
 
@@ -348,7 +298,7 @@ Con los conocimientos adquiridos en estos 6 módulos, el alumno tiene una **base
 
 ---
 
-### 6.6 Recursos y Comunidad
+### 6.5 Recursos y Comunidad
 
 Para seguir aprendiendo y resolver dudas, estos son los recursos de referencia más importantes:
 

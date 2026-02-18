@@ -21,3 +21,9 @@ desktop.ini
 
 # Logs
 *.log
+
+# Scripts
+*.ps1
+
+# Presentacion
+Presentacion_Servicios_Red.md

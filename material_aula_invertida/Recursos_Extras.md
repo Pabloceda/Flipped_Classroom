@@ -71,10 +71,13 @@ Los módulos teóricos del curso están disponibles en esta misma carpeta:
 | Módulo | Archivo | Contenido |
 |:-------|:--------|:----------|
 | Módulo 1 | [01_Fundamentos_Web.md](./Apuntes_Teoría/01_Fundamentos_Web.md) | HTTP, arquitectura web, Apache vs Nginx |
-| Módulo 2 | [02_Docker_Infraestructura.md](./02_Docker_Infraestructura.md) | Imágenes, contenedores, Dockerfile, redes, volúmenes |
-| Módulo 3 | [03_Nginx_Configuracion.md](./03_Nginx_Configuracion.md) | Configuración Nginx, virtual hosts, locations |
-| Módulo 4 | [04_Proxy_y_Balanceo.md](./04_Proxy_y_Balanceo.md) | Proxy inverso, upstreams, algoritmos de balanceo |
-| Módulo 5 | [05_Seguridad_Hardening.md](./05_Seguridad_Hardening.md) | HTTPS, HSTS, rate limiting, autenticación, headers |
+| Módulo 2 | [02_Docker_Infraestructura.md](./Apuntes_Teoría/02_Docker_Infraestructura.md) | Imágenes, contenedores, Dockerfile, redes, volúmenes |
+| Módulo 3 | [03_Nginx_Core.md](./Apuntes_Teoría/03_Nginx_Core.md) | Configuración Nginx, virtual hosts, locations |
+| Módulo 4 | [04_Proxy_y_Balanceo.md](./Apuntes_Teoría/04_Proxy_y_Balanceo.md) | Proxy inverso, upstreams, algoritmos de balanceo |
+| Módulo 5 | [05_Seguridad_Hardening.md](./Apuntes_Teoría/05_Seguridad_Hardening.md) | HTTPS, HSTS, rate limiting, autenticación, headers |
+| Módulo 6 | [06_Operaciones_y_Debug.md](./Apuntes_Teoría/06_Operaciones_y_Debug.md) | Comandos de operación, debugging y troubleshooting |
+| Módulo 7 | [07_Laboratorio_Practicos.md](./Apuntes_Teoría/07_Laboratorio_Practicos.md) | Laboratorios prácticos guiados |
+
 
 ---
 
