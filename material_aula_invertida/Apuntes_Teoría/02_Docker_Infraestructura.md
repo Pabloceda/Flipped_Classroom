@@ -70,24 +70,24 @@ Docker es una plataforma de **containerización** que utiliza tecnologías de ai
 
 ```mermaid
 graph TD
-    subgraph VM [🖥️ Máquina Virtual]
-        Hardware1[Hardware] --- HostOS1[Host OS]
+    subgraph VM ["🖥️ Máquina Virtual"]
+        Hardware1[Hardware] --- HostOS1["Host OS"]
         HostOS1 --- Hyper[Hypervisor]
-        Hyper --- GuestOS1[Guest OS (GBs)]
-        Hyper --- GuestOS2[Guest OS (GBs)]
-        GuestOS1 --- Bins1[Libs/Deps]
-        GuestOS2 --- Bins2[Libs/Deps]
-        Bins1 --- App1[App A]
-        Bins2 --- App2[App B]
+        Hyper --- GuestOS1["Guest OS (GBs)"]
+        Hyper --- GuestOS2["Guest OS (GBs)"]
+        GuestOS1 --- Bins1["Libs/Deps"]
+        GuestOS2 --- Bins2["Libs/Deps"]
+        Bins1 --- App1["App A"]
+        Bins2 --- App2["App B"]
     end
 
-    subgraph Container [🐳 Contenedor Docker]
-        Hardware2[Hardware] --- HostOS2[Host OS]
-        HostOS2 --- Engine[Docker Engine]
-        Engine --- LibsA[Libs/Deps]
-        Engine --- LibsB[Libs/Deps]
-        LibsA --- AppA[App A]
-        LibsB --- AppB[App B]
+    subgraph Container ["🐳 Contenedor Docker"]
+        Hardware2[Hardware] --- HostOS2["Host OS"]
+        HostOS2 --- Engine["Docker Engine"]
+        Engine --- LibsA["Libs/Deps"]
+        Engine --- LibsB["Libs/Deps"]
+        LibsA --- AppA["App A"]
+        LibsB --- AppB["App B"]
     end
     
     style GuestOS1 fill:#ff9999,stroke:#333
@@ -115,9 +115,9 @@ Una **imagen Docker** es una plantilla de solo lectura que contiene todo lo nece
 
 ```mermaid
 graph BT
-    L1[Capa 1: Base OS (Alpine) ⬜] --> L2[Capa 2: Software (Nginx) 🟡]
-    L2 --> L3[Capa 3: Config (nginx.conf) 🔵]
-    L3 --> L4[Capa 4: Arranque (CMD) 🟢]
+    L1["Capa 1: Base OS (Alpine) ⬜"] --> L2["Capa 2: Software (Nginx) 🟡"]
+    L2 --> L3["Capa 3: Config (nginx.conf) 🔵"]
+    L3 --> L4["Capa 4: Arranque (CMD) 🟢"]
     
     style L1 fill:#f9f9f9,stroke:#333
     style L2 fill:#fffae6,stroke:#333
@@ -586,15 +586,15 @@ docker run --network my_bridge nginx:alpine
 
 ```mermaid
 graph TD
-    Host[🖥️ Host Físico (eth0)] --- Bridge[Switch Virtual (docker0) 172.17.0.1]
+    Host["🖥️ Host Físico (eth0)"] --- Bridge["Switch Virtual (docker0) 172.17.0.1"]
     
     Bridge --- Veth1[veth0]
     Bridge --- Veth2[veth1]
     Bridge --- Veth3[veth2]
     
-    Veth1 --- C1[📦 Contenedor 1 (172.17.0.2)]
-    Veth2 --- C2[📦 Contenedor 2 (172.17.0.3)]
-    Veth3 --- C3[📦 Contenedor 3 (172.17.0.4)]
+    Veth1 --- C1["📦 Contenedor 1 (172.17.0.2)"]
+    Veth2 --- C2["📦 Contenedor 2 (172.17.0.3)"]
+    Veth3 --- C3["📦 Contenedor 3 (172.17.0.4)"]
     
     style Bridge fill:#bbf,stroke:#333
 ```
@@ -634,15 +634,15 @@ docker network create --driver overlay --attachable my_overlay
 
 ```mermaid
 graph LR
-    subgraph Host1 [🖥️ Host 1]
+    subgraph Host1 ["🖥️ Host 1"]
         C1[Container A]
     end
     
-    subgraph Host2 [🖥️ Host 2]
+    subgraph Host2 ["🖥️ Host 2"]
         C2[Container C]
     end
     
-    C1 <-->|🌐 Túnel VXLAN (UDP)| C2
+    C1 <-->|"🌐 Túnel VXLAN (UDP)"| C2
     
     style C1 fill:#dfd
     style C2 fill:#dfd

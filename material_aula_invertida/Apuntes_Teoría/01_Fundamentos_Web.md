@@ -26,8 +26,8 @@ Ejemplos de software servidor: **Nginx**, **Apache HTTP Server**, **IIS** (Micro
 
 ```mermaid
 sequenceDiagram
-    participant C as � Cliente (Navegador)
-    participant S as 🖥️ Servidor Web (Nginx)
+    participant C as "👤 Cliente (Navegador)"
+    participant S as "🖥️ Servidor Web (Nginx)"
     
     C->>S: 1. Petición HTTP (GET /index.html)
     Note over S: 2. Procesa: Busca archivo / Ejecuta código
@@ -196,15 +196,15 @@ server {
 
 ```mermaid
 graph TD
-    subgraph H2 [🐢 Stack HTTP/2]
-        L7_2[HTTP/2] --> SSL[🔒 TLS 1.2 / 1.3]
-        SSL --> TCP[TCP (Transporte Fiable)]
-        TCP --> IP2[IP]
+    subgraph H2 ["🐢 Stack HTTP/2"]
+        L7_2["HTTP/2"] --> SSL["🔒 TLS 1.2 / 1.3"]
+        SSL --> TCP["TCP (Transporte Fiable)"]
+        TCP --> IP2["IP"]
     end
     
-    subgraph H3 [🚀 Stack HTTP/3]
-        L7_3[HTTP/3] --> QUIC[⚡ QUIC (UDP + TLS 1.3)]
-        QUIC --> IP3[IP]
+    subgraph H3 ["🚀 Stack HTTP/3"]
+        L7_3["HTTP/3"] --> QUIC["⚡ QUIC (UDP + TLS 1.3)"]
+        QUIC --> IP3["IP"]
     end
     
     style QUIC fill:#f9f,stroke:#333

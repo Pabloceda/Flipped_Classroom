@@ -41,12 +41,12 @@ Cliente → Internet → [Reverse Proxy] → Backend
 
 ```mermaid
 graph LR
-    Internet((☁️ Internet)) -->|:80 / :443| Nginx[🛡️ Nginx Proxy]
+    Internet(("☁️ Internet")) -->|:80 / :443| Nginx["🛡️ Nginx Proxy"]
     
     subgraph Internal Network
-        Nginx -->|:3000| App[🖥️ Web App (Node)]
-        Nginx -->|:8080| API[⚙️ API REST]
-        Nginx -->|:9000| Static[🖼️ Assets]
+        Nginx -->|:3000| App["🖥️ Web App (Node)"]
+        Nginx -->|:8080| API["⚙️ API REST"]
+        Nginx -->|:9000| Static["🖼️ Assets"]
     end
     
     style Nginx fill:#f96,stroke:#333,stroke-width:2px
@@ -72,16 +72,16 @@ Antes de entrar en directivas, veamos cómo encaja Nginx como proxy inverso en u
 
 ```mermaid
 flowchart TD
-    User((👤 Cliente)) -->|HTTPS| FW[🔥 Firewall]
-    FW --> Proxy[🛡️ Nginx Reverse Proxy]
+    User(("👤 Cliente")) -->|HTTPS| FW["🔥 Firewall"]
+    FW --> Proxy["🛡️ Nginx Reverse Proxy"]
     
-    subgraph Backends [🎯 Routing & Load Balancing]
-        Proxy -->|/api| Node[🟢 Node.js API :3000]
-        Proxy -->|/legacy| PHP[🟣 PHP-FPM :9000]
-        Proxy -->|/static| Static[🔵 Nginx Assets :9000]
+    subgraph Backends ["🎯 Routing & Load Balancing"]
+        Proxy -->|/api| Node["🟢 Node.js API :3000"]
+        Proxy -->|/legacy| PHP["🟣 PHP-FPM :9000"]
+        Proxy -->|/static| Static["🔵 Nginx Assets :9000"]
     end
     
-    Node --> DB[(🗄️ PostgreSQL)]
+    Node --> DB[("🗄️ PostgreSQL")]
     PHP --> DB
     
     style Proxy fill:#ff9,stroke:#333
@@ -339,11 +339,11 @@ Un **upstream** es un grupo de servidores backend que Nginx usa para distribuir 
 
 ```mermaid
 graph LR
-    Nginx[🛡️ Nginx Proxy] --> Upstream{⚡ Upstream "backend"}
+    Nginx["🛡️ Nginx Proxy"] --> Upstream{"⚡ Upstream 'backend'"}
     
-    Upstream -->|Round Robin| S1[🖥️ Backend 1]
-    Upstream -->|Round Robin| S2[🖥️ Backend 2]
-    Upstream -->|Round Robin| S3[🖥️ Backend 3]
+    Upstream -->|Round Robin| S1["🖥️ Backend 1"]
+    Upstream -->|Round Robin| S2["🖥️ Backend 2"]
+    Upstream -->|Round Robin| S3["🖥️ Backend 3"]
     
     style Upstream fill:#bbf,stroke:#333
 ```
@@ -905,16 +905,16 @@ Este caso integra todo lo aprendido en los módulos 2 y 4: Docker Compose, proxy
 ### Arquitectura Completa
 ```mermaid
 graph TD
-    Client((👤 Cliente)) -->|HTTPS :443| Proxy[🛡️ Nginx Proxy]
+    Client(("👤 Cliente")) -->|HTTPS :443| Proxy["🛡️ Nginx Proxy"]
     
     subgraph Docker Compose Network
-        Proxy -->|HTTP :80| WP[📝 WordPress]
-        WP -->|TCP :3306| DB[(🐬 MariaDB)]
+        Proxy -->|HTTP :80| WP["📝 WordPress"]
+        WP -->|TCP :3306| DB[("🐬 MariaDB")]
     end
     
-    subgraph Volumes [💾 Persistencia]
-        WP -.->|/var/www/html| VolWP[📂 wordpress_data]
-        DB -.->|/var/lib/mysql| VolDB[📂 db_data]
+    subgraph Volumes ["💾 Persistencia"]
+        WP -.->|/var/www/html| VolWP["📂 wordpress_data"]
+        DB -.->|/var/lib/mysql| VolDB["📂 db_data"]
     end
     
     style Proxy fill:#f9f
