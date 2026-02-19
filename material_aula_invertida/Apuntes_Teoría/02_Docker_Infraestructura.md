@@ -68,15 +68,33 @@ Docker es una plataforma de **containerización** que utiliza tecnologías de ai
 
 #### Contenedores vs Máquinas Virtuales
 
-| Capa | 🖥️ Máquina Virtual | 🐳 Contenedor Docker |
-|:----:|:------------------:|:--------------------:|
-| **App** | App A · App B | App A · App B |
-| **Dependencias** | Libs/Deps (×2) | Libs/Deps (×2) |
-| **Sistema** | Guest OS (×2) | *(compartido)* |
-| **Abstracción** | Hypervisor | Docker Engine |
-| **Base** | Host OS | Host OS (Linux) |
-| **Físico** | Hardware | Hardware |
-| | *~GB por VM · minutos* | *~MB por imagen · segundos* |
+```mermaid
+graph TD
+    subgraph VM [🖥️ Máquina Virtual]
+        Hardware1[Hardware] --- HostOS1[Host OS]
+        HostOS1 --- Hyper[Hypervisor]
+        Hyper --- GuestOS1[Guest OS (GBs)]
+        Hyper --- GuestOS2[Guest OS (GBs)]
+        GuestOS1 --- Bins1[Libs/Deps]
+        GuestOS2 --- Bins2[Libs/Deps]
+        Bins1 --- App1[App A]
+        Bins2 --- App2[App B]
+    end
+
+    subgraph Container [🐳 Contenedor Docker]
+        Hardware2[Hardware] --- HostOS2[Host OS]
+        HostOS2 --- Engine[Docker Engine]
+        Engine --- LibsA[Libs/Deps]
+        Engine --- LibsB[Libs/Deps]
+        LibsA --- AppA[App A]
+        LibsB --- AppB[App B]
+    end
+    
+    style GuestOS1 fill:#ff9999,stroke:#333
+    style GuestOS2 fill:#ff9999,stroke:#333
+    style Engine fill:#99ff99,stroke:#333
+```
+> **Diferencia clave**: Los contenedores comparten el kernel del Host OS, eliminando la pesada capa del Guest OS.
 
 | Característica | Máquina Virtual | Contenedor |
 |:--------------|:----------------|:-----------|
@@ -95,12 +113,17 @@ Docker es una plataforma de **containerización** que utiliza tecnologías de ai
 
 Una **imagen Docker** es una plantilla de solo lectura que contiene todo lo necesario para ejecutar una aplicación: código, runtime, librerías, variables de entorno y archivos de configuración. Es como una "instantánea" del sistema de archivos.
 
-| # | Capa | Instrucción | Rol |
-|:-:|:-----|:------------|:----|
-| 4 | 🟢 Arranque | `CMD nginx -g daemon off;` | Punto de entrada del contenedor |
-| 3 | 🔵 Config | `COPY nginx.conf /etc/nginx/` | Configuración personalizada |
-| 2 | 🟡 Software | `RUN apk add nginx` | Instalación de paquetes |
-| 1 | ⬜ Base OS | `FROM alpine:3.19` | Sistema operativo mínimo |
+```mermaid
+graph BT
+    L1[Capa 1: Base OS (Alpine) ⬜] --> L2[Capa 2: Software (Nginx) 🟡]
+    L2 --> L3[Capa 3: Config (nginx.conf) 🔵]
+    L3 --> L4[Capa 4: Arranque (CMD) 🟢]
+    
+    style L1 fill:#f9f9f9,stroke:#333
+    style L2 fill:#fffae6,stroke:#333
+    style L3 fill:#e6f3ff,stroke:#333
+    style L4 fill:#e6fffa,stroke:#333
+```
 
 > **Cada capa es de solo lectura.** Al ejecutar un contenedor, Docker añade una capa de escritura temporal encima.
 
@@ -561,13 +584,20 @@ docker run --network my_bridge nginx:alpine
 
 **Arquitectura red Bridge**:
 
-| Interfaz | Rol | IP ejemplo |
-|:---------|:----|:-----------|
-| `docker0` | Switch virtual (bridge) | 172.17.0.1 (gateway) |
-| `veth0` | Canal Container 1 ↔ bridge | 172.17.0.2 |
-| `veth1` | Canal Container 2 ↔ bridge | 172.17.0.3 |
-| `veth2` | Canal Container 3 ↔ bridge | 172.17.0.4 |
-| `eth0` | Interfaz física del host | IP externa |
+```mermaid
+graph TD
+    Host[🖥️ Host Físico (eth0)] --- Bridge[Switch Virtual (docker0) 172.17.0.1]
+    
+    Bridge --- Veth1[veth0]
+    Bridge --- Veth2[veth1]
+    Bridge --- Veth3[veth2]
+    
+    Veth1 --- C1[📦 Contenedor 1 (172.17.0.2)]
+    Veth2 --- C2[📦 Contenedor 2 (172.17.0.3)]
+    Veth3 --- C3[📦 Contenedor 3 (172.17.0.4)]
+    
+    style Bridge fill:#bbf,stroke:#333
+```
 
 **DNS Integrado**: Los contenedores en la misma red bridge custom se resuelven por nombre:
 
@@ -602,10 +632,21 @@ docker network create --driver overlay --attachable my_overlay
 
 **Arquitectura red Overlay (multi-host)**:
 
-| | 🖥️ Host 1 | 🌐 Túnel VXLAN | 🖥️ Host 2 |
-|:-:|:---------:|:--------------:|:---------:|
-| **Contenedores** | Container A (10.0.1.2) | ← UDP encapsulado → | Container C (10.0.1.4) |
-| **Visibilidad** | Se ven entre sí como si estuvieran en la misma LAN | | |
+```mermaid
+graph LR
+    subgraph Host1 [🖥️ Host 1]
+        C1[Container A]
+    end
+    
+    subgraph Host2 [🖥️ Host 2]
+        C2[Container C]
+    end
+    
+    C1 <-->|🌐 Túnel VXLAN (UDP)| C2
+    
+    style C1 fill:#dfd
+    style C2 fill:#dfd
+```
 
 **4. None**:
 

@@ -24,12 +24,16 @@ Ejemplos de software servidor: **Nginx**, **Apache HTTP Server**, **IIS** (Micro
 
 #### Flujo básico: ¿Cómo funciona?
 
-| # | Origen | Dirección | Destino | Acción | Detalle |
-|:-:|:------:|:---------:|:-------:|:-------|:--------|
-| **1** | 🧑‍💻 Navegador | ➡️ | 🖥️ Servidor | **Petición** | `GET /index.html` (Solicita recurso) |
-| **2** | 🖥️ Servidor | ⚙️ | 🖥️ Servidor | **Proceso** | Busca archivo, ejecuta código, consulta BD |
-| **3** | 🖥️ Servidor | ⬅️ | 🧑‍💻 Navegador | **Respuesta** | `HTTP 200 OK` + Archivo HTML |
-| **4** | 🧑‍💻 Navegador | 👁️ | 🧑‍💻 Usuario | **Visualización** | Renderiza el HTML/CSS/JS |
+```mermaid
+sequenceDiagram
+    participant C as � Cliente (Navegador)
+    participant S as 🖥️ Servidor Web (Nginx)
+    
+    C->>S: 1. Petición HTTP (GET /index.html)
+    Note over S: 2. Procesa: Busca archivo / Ejecuta código
+    S-->>C: 3. Respuesta HTTP (200 OK + HTML)
+    Note over C: 4. Visualización: Renderiza HTML/CSS
+```
 
 **En resumen**: el navegador **pide** (petición HTTP), el servidor **busca** y **responde** (respuesta HTTP). Todo el protocolo HTTP que veremos a continuación define las reglas de esta conversación.
 
@@ -190,12 +194,21 @@ server {
 
 **Stack Comparison**:
 
-| Capa | 🐢 HTTP/1.1 & HTTP/2 | 🚀 HTTP/3 (QUIC) |
-|:----:|:--------------------:|:----------------:|
-| **Aplicación** | HTTP/2 (Streams) | HTTP/3 (Streams) |
-| **Seguridad** | TLS 1.2 / 1.3 (capa separada) | **TLS 1.3** (Integrado en QUIC) |
-| **Transporte** | **TCP** (Fiable, lento por handshake) | **QUIC** (UDP + Fiabilidad por software) |
-| **Red** | IP | IP |
+```mermaid
+graph TD
+    subgraph H2 [🐢 Stack HTTP/2]
+        L7_2[HTTP/2] --> SSL[🔒 TLS 1.2 / 1.3]
+        SSL --> TCP[TCP (Transporte Fiable)]
+        TCP --> IP2[IP]
+    end
+    
+    subgraph H3 [🚀 Stack HTTP/3]
+        L7_3[HTTP/3] --> QUIC[⚡ QUIC (UDP + TLS 1.3)]
+        QUIC --> IP3[IP]
+    end
+    
+    style QUIC fill:#f9f,stroke:#333
+```
 
 > **Gran diferencia**: HTTP/3 elimina el handshake TCP redundante y el "head-of-line blocking" al mover la fiabilidad a QUIC (sobre UDP).
 

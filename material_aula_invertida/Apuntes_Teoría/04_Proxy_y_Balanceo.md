@@ -39,14 +39,21 @@ Cliente → Internet → [Reverse Proxy] → Backend
 
 #### Arquitectura con Nginx como Reverse Proxy
 
-| Nivel | Rol | Componente | Puerto |
-|:---:|:---|:-----------|:------:|
-| **Frontend** | 🛡️ **Proxy Inverso** | **Nginx** | 80 / 443 |
-| **Backend** | 🖥️ App Principal | Web App (Node/Python) | :3000 |
-| **Backend** | ⚙️ Servicios | API REST | :8080 |
-| **Backend** | 🖼️ Estáticos | CDN / Static Server | :9000 |
-
+```mermaid
+graph LR
+    Internet((☁️ Internet)) -->|:80 / :443| Nginx[🛡️ Nginx Proxy]
+    
+    subgraph Internal Network
+        Nginx -->|:3000| App[🖥️ Web App (Node)]
+        Nginx -->|:8080| API[⚙️ API REST]
+        Nginx -->|:9000| Static[🖼️ Assets]
+    end
+    
+    style Nginx fill:#f96,stroke:#333,stroke-width:2px
+```
 > **Nginx centraliza el acceso**: El cliente solo ve el puerto 443. Nginx decide a dónde va cada petición.
+
+
 
 **Ventajas**:
 
@@ -63,13 +70,23 @@ Cliente → Internet → [Reverse Proxy] → Backend
 
 Antes de entrar en directivas, veamos cómo encaja Nginx como proxy inverso en una arquitectura web real. Este diagrama muestra el recorrido completo de una petición:
 
-| Etapa | Componente | Función Principal |
-|:-----:|:-----------|:------------------|
-| **1** | ☁️ Internet → 🔥 Firewall | Filtrado de tráfico (solo puertos 80/443 permitidos) |
-| **2** | 🛡️ **Nginx Reverse Proxy** | **Terminación SSL**, Balanceo, Caché, Compresión Gzip |
-| **3** | 🔀 **Routing** | Distribuye tráfico según la URL (`/api`, `/static`, `/`) |
-| **4** | 🏭 **Backends** | 🟢 **Node.js** (:3000) — API <br> 🟣 **PHP-FPM** (:9000) — Legacy App <br> 🔵 **Nginx Static** (:9000) — Assets |
-| **5** | 🗄️ **Base de Datos** | **PostgreSQL** (:5432) — Persistencia de datos |
+```mermaid
+flowchart TD
+    User((👤 Cliente)) -->|HTTPS| FW[🔥 Firewall]
+    FW --> Proxy[🛡️ Nginx Reverse Proxy]
+    
+    subgraph Backends [🎯 Routing & Load Balancing]
+        Proxy -->|/api| Node[🟢 Node.js API :3000]
+        Proxy -->|/legacy| PHP[🟣 PHP-FPM :9000]
+        Proxy -->|/static| Static[🔵 Nginx Assets :9000]
+    end
+    
+    Node --> DB[(🗄️ PostgreSQL)]
+    PHP --> DB
+    
+    style Proxy fill:#ff9,stroke:#333
+    style DB fill:#eee,stroke:#333
+```
 
 
 #### Flujo de Petición
@@ -320,9 +337,16 @@ Un **upstream** es un grupo de servidores backend que Nginx usa para distribuir 
 #### Sintaxis Básica
 
 
-| Origen | Grupo (Upstream) | Destinos (Backends) |
-|:------:|:-----------------|:--------------------|
-| **Nginx (Proxy)** | ➡️ `upstream "backend"` | 🖥️ **backend1** :3000 <br> 🖥️ **backend2** :3000 <br> 🖥️ **backend3** :3000 |
+```mermaid
+graph LR
+    Nginx[🛡️ Nginx Proxy] --> Upstream{⚡ Upstream "backend"}
+    
+    Upstream -->|Round Robin| S1[🖥️ Backend 1]
+    Upstream -->|Round Robin| S2[🖥️ Backend 2]
+    Upstream -->|Round Robin| S3[🖥️ Backend 3]
+    
+    style Upstream fill:#bbf,stroke:#333
+```
 
 El bloque `upstream` actúa como un **servidor virtual** que agrupa a todos los servidores reales.
 
@@ -878,19 +902,25 @@ Este caso integra todo lo aprendido en los módulos 2 y 4: Docker Compose, proxy
 
 ### Flujo de Datos
 
-| Origen | Destino | Protocolo | Puerto |
-|:------:|:-------:|:---------:|:------:|
-| ☁️ Internet | 🛡️ **Nginx (Proxy)** | HTTPS / HTTP | :443 / :80 |
-| 🛡️ Nginx | 📝 **WordPress** | HTTP (Interno) | :80 |
-| 📝 WordPress | 🐬 **MariaDB** | TCP (Interno) | :3306 |
-
-### 💾 Persistencia (Volúmenes Docker)
-
-| Volumen Docker | Ruta en Contenedor | Contenido |
-|:---------------|:-------------------|:----------|
-| `wordpress_data` | `/var/www/html` | Código WP, temas, plugins, uploads |
-| `db_data` | `/var/lib/mysql` | Archivos de la base de datos |
-| `ssl_certs` | `/etc/nginx/ssl` | Certificados TLS/SSL |
+### Arquitectura Completa
+```mermaid
+graph TD
+    Client((👤 Cliente)) -->|HTTPS :443| Proxy[🛡️ Nginx Proxy]
+    
+    subgraph Docker Compose Network
+        Proxy -->|HTTP :80| WP[📝 WordPress]
+        WP -->|TCP :3306| DB[(🐬 MariaDB)]
+    end
+    
+    subgraph Volumes [💾 Persistencia]
+        WP -.->|/var/www/html| VolWP[📂 wordpress_data]
+        DB -.->|/var/lib/mysql| VolDB[📂 db_data]
+    end
+    
+    style Proxy fill:#f9f
+    style WP fill:#ccf
+    style DB fill:#eee
+```
 
 
 #### docker-compose.yml Completo
