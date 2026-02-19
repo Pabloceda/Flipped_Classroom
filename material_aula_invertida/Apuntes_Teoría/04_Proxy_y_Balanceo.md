@@ -39,19 +39,14 @@ Cliente → Internet → [Reverse Proxy] → Backend
 
 #### Arquitectura con Nginx como Reverse Proxy
 
-```
-                    ┌──────────────────────┐
-Internet ───────────┤   Nginx (Reverse    │
-                    │   Proxy) :80, :443   │
-                    └──────────┬───────────┘
-                               │
-                ┌──────────────┼──────────────┐
-                │              │              │
-         ┌──────▼───┐   ┌─────▼────┐  ┌──────▼───┐
-         │  Web App │   │  API     │  │  Static  │
-         │  :3000   │   │  :8080   │  │  :9000   │
-         └──────────┘   └──────────┘  └──────────┘
-```
+| Nivel | Rol | Componente | Puerto |
+|:---:|:---|:-----------|:------:|
+| **Frontend** | 🛡️ **Proxy Inverso** | **Nginx** | 80 / 443 |
+| **Backend** | 🖥️ App Principal | Web App (Node/Python) | :3000 |
+| **Backend** | ⚙️ Servicios | API REST | :8080 |
+| **Backend** | 🖼️ Estáticos | CDN / Static Server | :9000 |
+
+> **Nginx centraliza el acceso**: El cliente solo ve el puerto 443. Nginx decide a dónde va cada petición.
 
 **Ventajas**:
 
@@ -68,38 +63,13 @@ Internet ───────────┤   Nginx (Reverse    │
 
 Antes de entrar en directivas, veamos cómo encaja Nginx como proxy inverso en una arquitectura web real. Este diagrama muestra el recorrido completo de una petición:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                         INTERNET                            │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                    ┌───────▼────────┐
-                    │  Firewall      │
-                    │  Port 80, 443  │
-                    └───────┬────────┘
-                            │
-             ┌──────────────▼──────────────┐
-             │   Nginx Reverse Proxy       │
-             │   - SSL Termination         │
-             │   - Load Balancing          │
-             │   - Caching                 │
-             │   - Compression             │
-             │   - Rate Limiting           │
-             └──────────────┬──────────────┘
-                            │
-        ┌───────────────────┼───────────────────┐
-        │                   │                   │
-   ┌────▼─────┐        ┌───▼────┐         ┌────▼─────┐
-   │  Nginx   │        │  Node  │         │  PHP-FPM │
-   │  Static  │        │  App   │         │  Backend │
-   │  :9000   │        │  :3000 │         │  :9000   │
-   └──────────┘        └───┬────┘         └────┬─────┘
-                           │                   │
-                       ┌───▼───────────────────▼───┐
-                       │   PostgreSQL Database     │
-                       │   :5432                   │
-                       └───────────────────────────┘
-```
+| Etapa | Componente | Función Principal |
+|:-----:|:-----------|:------------------|
+| **1** | ☁️ Internet → 🔥 Firewall | Filtrado de tráfico (solo puertos 80/443 permitidos) |
+| **2** | 🛡️ **Nginx Reverse Proxy** | **Terminación SSL**, Balanceo, Caché, Compresión Gzip |
+| **3** | 🔀 **Routing** | Distribuye tráfico según la URL (`/api`, `/static`, `/`) |
+| **4** | 🏭 **Backends** | 🟢 **Node.js** (:3000) — API <br> 🟣 **PHP-FPM** (:9000) — Legacy App <br> 🔵 **Nginx Static** (:9000) — Assets |
+| **5** | 🗄️ **Base de Datos** | **PostgreSQL** (:5432) — Persistencia de datos |
 
 
 #### Flujo de Petición
@@ -349,19 +319,13 @@ Un **upstream** es un grupo de servidores backend que Nginx usa para distribuir 
 
 #### Sintaxis Básica
 
-```
-┌───────────────┐     ┌───────────────────┐
-│               │     │  backend1 :3000  │
-│   Nginx       │───►│                   │
-│   (proxy)     │     └───────────────────┘
-│               │     ┌───────────────────┐
-│  upstream     │───►│  backend2 :3000  │
-│  "backend"    │     │                   │
-│               │     └───────────────────┘
-│               │     ┌───────────────────┐
-│               │───►│  backend3 :3000  │
-└───────────────┘     └───────────────────┘
-```
+
+| Origen | Grupo (Upstream) | Destinos (Backends) |
+|:------:|:-----------------|:--------------------|
+| **Nginx (Proxy)** | ➡️ `upstream "backend"` | 🖥️ **backend1** :3000 <br> 🖥️ **backend2** :3000 <br> 🖥️ **backend3** :3000 |
+
+El bloque `upstream` actúa como un **servidor virtual** que agrupa a todos los servidores reales.
+
 
 ```nginx
 upstream backend_name {
@@ -912,28 +876,21 @@ Este caso integra todo lo aprendido en los módulos 2 y 4: Docker Compose, proxy
 
 #### Arquitectura
 
-```
-                         ┌─────────────────┐
-  Internet :443/:80  ───►│  Nginx (Proxy)  │
-                         │  + SSL/TLS      │
-                         └────────┬────────┘
-                                  │ proxy_pass :80
-                         ┌────────▼────────┐
-                         │   WordPress     │
-                         │   (PHP-FPM)     │
-                         │   :80           │
-                         └────────┬────────┘
-                                  │ TCP :3306
-                         ┌────────▼────────┐
-                         │   MariaDB       │
-                         │   :3306         │
-                         └─────────────────┘
+### Flujo de Datos
 
-Volúmenes persistentes:
-  wordpress_data → /var/www/html
-  db_data        → /var/lib/mysql
-  ssl_certs      → /etc/nginx/ssl
-```
+| Origen | Destino | Protocolo | Puerto |
+|:------:|:-------:|:---------:|:------:|
+| ☁️ Internet | 🛡️ **Nginx (Proxy)** | HTTPS / HTTP | :443 / :80 |
+| 🛡️ Nginx | 📝 **WordPress** | HTTP (Interno) | :80 |
+| 📝 WordPress | 🐬 **MariaDB** | TCP (Interno) | :3306 |
+
+### 💾 Persistencia (Volúmenes Docker)
+
+| Volumen Docker | Ruta en Contenedor | Contenido |
+|:---------------|:-------------------|:----------|
+| `wordpress_data` | `/var/www/html` | Código WP, temas, plugins, uploads |
+| `db_data` | `/var/lib/mysql` | Archivos de la base de datos |
+| `ssl_certs` | `/etc/nginx/ssl` | Certificados TLS/SSL |
 
 
 #### docker-compose.yml Completo

@@ -1,5 +1,26 @@
 ## MÓDULO 2: DOCKERIZACIÓN DEL SERVICIO
 
+> **Conexión con el Módulo 1**: Sabemos instalar y configurar servidores web (Apache, Nginx). El problema es que esa instalación es **manual, frágil y difícil de reproducir**. Docker resuelve esto empaquetando el servidor y toda su configuración en una imagen portable.
+
+### ¿Qué aprenderás en este módulo?
+
+- Por qué Docker se ha convertido en el estándar del despliegue moderno
+- Cómo funcionan las **imágenes**, los **contenedores** y el **Dockerfile**
+- Gestión de **puertos**, **volúmenes** y **redes**
+- Orquestar múltiples servicios con **Docker Compose**
+
+### Problema que resuelve
+
+Sin Docker, el clásico *"en mi máquina funciona"* es una fuente constante de errores. Con Docker, el entorno de desarrollo, pruebas y producción es **exactamente el mismo**:
+
+```
+Sin Docker:          Con Docker:
+Dev  ≠ Staging      Dev  = Staging = Producción
+Staging ≠ Prod      docker build once → run anywhere
+```
+
+---
+
 ### 2.1 ¿Por qué Docker en Servidores Web?
 
 #### Definición Técnica: Docker
@@ -47,23 +68,15 @@ Docker es una plataforma de **containerización** que utiliza tecnologías de ai
 
 #### Contenedores vs Máquinas Virtuales
 
-```
-Máquina Virtual:                    Contenedor Docker:
-┌────────────────────────┐          ┌────────────────────────┐
-│   App A    │   App B   │          │   App A    │   App B   │
-├────────────┼───────────┤          ├────────────┼───────────┤
-│  Libs/Deps │ Libs/Deps │          │  Libs/Deps │ Libs/Deps │
-├────────────┼───────────┤          ├────────────┴───────────┤
-│  Guest OS  │ Guest OS  │          │   Docker Engine        │
-├────────────┴───────────┤          ├────────────────────────┤
-│      Hypervisor        │          │      Host OS (Linux)   │
-├────────────────────────┤          ├────────────────────────┤
-│      Host OS           │          │      Hardware          │
-├────────────────────────┤          └────────────────────────┘
-│      Hardware          │
-└────────────────────────┘
-  ~GB por VM, minutos            ~MB por contenedor, segundos
-```
+| Capa | 🖥️ Máquina Virtual | 🐳 Contenedor Docker |
+|:----:|:------------------:|:--------------------:|
+| **App** | App A · App B | App A · App B |
+| **Dependencias** | Libs/Deps (×2) | Libs/Deps (×2) |
+| **Sistema** | Guest OS (×2) | *(compartido)* |
+| **Abstracción** | Hypervisor | Docker Engine |
+| **Base** | Host OS | Host OS (Linux) |
+| **Físico** | Hardware | Hardware |
+| | *~GB por VM · minutos* | *~MB por imagen · segundos* |
 
 | Característica | Máquina Virtual | Contenedor |
 |:--------------|:----------------|:-----------|
@@ -82,18 +95,14 @@ Máquina Virtual:                    Contenedor Docker:
 
 Una **imagen Docker** es una plantilla de solo lectura que contiene todo lo necesario para ejecutar una aplicación: código, runtime, librerías, variables de entorno y archivos de configuración. Es como una "instantánea" del sistema de archivos.
 
-```
-Imagen Docker (capas de solo lectura):
-┌─────────────────────────────────┐
-│  Capa 4: CMD nginx -g daemon   │  ← Instrucción de arranque
-├─────────────────────────────────┤
-│  Capa 3: COPY nginx.conf       │  ← Configuración
-├─────────────────────────────────┤
-│  Capa 2: RUN apk add nginx     │  ← Software instalado
-├─────────────────────────────────┤
-│  Capa 1: Alpine Linux 3.19     │  ← Sistema operativo base
-└─────────────────────────────────┘
-```
+| # | Capa | Instrucción | Rol |
+|:-:|:-----|:------------|:----|
+| 4 | 🟢 Arranque | `CMD nginx -g daemon off;` | Punto de entrada del contenedor |
+| 3 | 🔵 Config | `COPY nginx.conf /etc/nginx/` | Configuración personalizada |
+| 2 | 🟡 Software | `RUN apk add nginx` | Instalación de paquetes |
+| 1 | ⬜ Base OS | `FROM alpine:3.19` | Sistema operativo mínimo |
+
+> **Cada capa es de solo lectura.** Al ejecutar un contenedor, Docker añade una capa de escritura temporal encima.
 
 **Conceptos clave**:
 - **Imagen ≠ Contenedor**: La imagen es la plantilla (clase); el contenedor es una instancia en ejecución (objeto)
@@ -550,18 +559,17 @@ docker network create my_bridge
 docker run --network my_bridge nginx:alpine
 ```
 
-**Arquitectura**:
+**Arquitectura red Bridge**:
 
-```
-Host
-  ├─ docker0 (bridge interface)
-  │    ├─ veth0 → Container 1 (172.17.0.2)
-  │    ├─ veth1 → Container 2 (172.17.0.3)
-  │    └─ veth2 → Container 3 (172.17.0.4)
-  └─ eth0 (external)
-```
+| Interfaz | Rol | IP ejemplo |
+|:---------|:----|:-----------|
+| `docker0` | Switch virtual (bridge) | 172.17.0.1 (gateway) |
+| `veth0` | Canal Container 1 ↔ bridge | 172.17.0.2 |
+| `veth1` | Canal Container 2 ↔ bridge | 172.17.0.3 |
+| `veth2` | Canal Container 3 ↔ bridge | 172.17.0.4 |
+| `eth0` | Interfaz física del host | IP externa |
 
-**DNS Integrado**:
+**DNS Integrado**: Los contenedores en la misma red bridge custom se resuelven por nombre:
 
 ```bash
 # Contenedores en misma red custom bridge se resuelven por nombre
@@ -592,15 +600,12 @@ docker run --network host nginx:alpine
 docker network create --driver overlay --attachable my_overlay
 ```
 
-**Arquitectura**:
+**Arquitectura red Overlay (multi-host)**:
 
-```
-Host 1                        Host 2
-  ├─ Container A                ├─ Container C
-  │  (10.0.1.2)                 │  (10.0.1.4)
-  └─ VXLAN ←─────────────────→ └─ VXLAN
-       (encapsulado en UDP)
-```
+| | 🖥️ Host 1 | 🌐 Túnel VXLAN | 🖥️ Host 2 |
+|:-:|:---------:|:--------------:|:---------:|
+| **Contenedores** | Container A (10.0.1.2) | ← UDP encapsulado → | Container C (10.0.1.4) |
+| **Visibilidad** | Se ven entre sí como si estuvieran en la misma LAN | | |
 
 **4. None**:
 

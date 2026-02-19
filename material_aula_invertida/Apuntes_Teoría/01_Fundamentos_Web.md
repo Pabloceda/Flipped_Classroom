@@ -24,18 +24,12 @@ Ejemplos de software servidor: **Nginx**, **Apache HTTP Server**, **IIS** (Micro
 
 #### Flujo básico: ¿Cómo funciona?
 
-```
-  Cliente (Navegador)                     Servidor Web
-  ┌──────────────────┐                   ┌──────────────────┐
-  │  Escribe URL:    │   1. Petición     │  Nginx/Apache    │
-  │  ejemplo.com     │ ──────────────►   │  escucha en :80  │
-  │                  │   HTTP GET /      │                  │
-  │                  │                   │  2. Busca el     │
-  │  4. Muestra la   │   3. Respuesta    │     archivo      │
-  │     página       │ ◄──────────────   │     index.html   │
-  │                  │   HTTP 200 OK     │                  │
-  └──────────────────┘   + HTML          └──────────────────┘
-```
+| # | Origen | Dirección | Destino | Acción | Detalle |
+|:-:|:------:|:---------:|:-------:|:-------|:--------|
+| **1** | 🧑‍💻 Navegador | ➡️ | 🖥️ Servidor | **Petición** | `GET /index.html` (Solicita recurso) |
+| **2** | 🖥️ Servidor | ⚙️ | 🖥️ Servidor | **Proceso** | Busca archivo, ejecuta código, consulta BD |
+| **3** | 🖥️ Servidor | ⬅️ | 🧑‍💻 Navegador | **Respuesta** | `HTTP 200 OK` + Archivo HTML |
+| **4** | 🧑‍💻 Navegador | 👁️ | 🧑‍💻 Usuario | **Visualización** | Renderiza el HTML/CSS/JS |
 
 **En resumen**: el navegador **pide** (petición HTTP), el servidor **busca** y **responde** (respuesta HTTP). Todo el protocolo HTTP que veremos a continuación define las reglas de esta conversación.
 
@@ -196,20 +190,14 @@ server {
 
 **Stack Comparison**:
 
-```
-HTTP/2 Stack:          HTTP/3 Stack:
-┌──────────────┐      ┌──────────────┐
-│    HTTP/2    │      │    HTTP/3    │
-├──────────────┤      ├──────────────┤
-│  TLS 1.2/1.3 │      │     QUIC     │ ← TLS 1.3 integrado
-├──────────────┤      │  (includes   │
-│     TCP      │      │  encryption) │
-├──────────────┤      ├──────────────┤
-│      IP      │      │     UDP      │
-└──────────────┘      ├──────────────┤
-                      │      IP      │
-                      └──────────────┘
-```
+| Capa | 🐢 HTTP/1.1 & HTTP/2 | 🚀 HTTP/3 (QUIC) |
+|:----:|:--------------------:|:----------------:|
+| **Aplicación** | HTTP/2 (Streams) | HTTP/3 (Streams) |
+| **Seguridad** | TLS 1.2 / 1.3 (capa separada) | **TLS 1.3** (Integrado en QUIC) |
+| **Transporte** | **TCP** (Fiable, lento por handshake) | **QUIC** (UDP + Fiabilidad por software) |
+| **Red** | IP | IP |
+
+> **Gran diferencia**: HTTP/3 elimina el handshake TCP redundante y el "head-of-line blocking" al mover la fiabilidad a QUIC (sobre UDP).
 
 **Configuración Nginx HTTP/3 (Nginx 1.25+)**:
 
