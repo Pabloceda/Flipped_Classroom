@@ -30,30 +30,26 @@ En los módulos anteriores hemos aprendido a servir contenido estático, a confi
 
 #### Criptografía Asimétrica (Handshake)
 
-```
-
-Cliente                                  Servidor
-│                                         │
-├──── ClientHello ────────────────────────>│
-│     (versión TLS, ciphers soportados)   │
-│                                         │
-│<──── ServerHello ─────────────────────┤
-│     (cipher elegido, certificado,      │
-│      clave pública)                    │
-│                                         │
-├──── Key Exchange ───────────────────────>│
-│     (Pre-Master Secret cifrado          │
-│      con clave pública del servidor)   │
-│                                         │
-│     [Ambos derivan Session Key]         │
-│                                         │
-├──── Finished ───────────────────────────>│
-│                                         │
-│<──── Finished ────────────────────────┤
-│                                         │
-├═════ Encrypted Application Data ═══════>│
-│<════════════════════════════════════════┤
-
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant S as Servidor
+    
+    Note over C: 1. Negociación
+    C->>S: ClientHello (versión TLS, ciphers)
+    S-->>C: ServerHello (cipher, certificado, clave pública)
+    
+    Note over C: 2. Intercambio de Claves
+    C->>S: Key Exchange (Pre-Master Secret cifrado)
+    Note over C, S: [Ambos derivan Session Key]
+    
+    Note over C: 3. Confirmación
+    C->>S: Finished
+    S-->>C: Finished
+    
+    Note over C, S: 4. Comunicación Segura
+    C->>S: Encrypted Application Data
+    S-->>C: Encrypted Application Data
 ```
 
 #### Criptografía Simétrica (Datos)
@@ -441,17 +437,26 @@ location /admin/ {
 
 Cuando el navegador encuentra `auth_basic`, muestra:
 
-```
-┌─────────────────────────────────────┐
-│  Authentication Required            │
-│                                     │
-│  Restricted Access                  │ ← Texto de auth_basic
-│                                     │
-│  Username: [______________]         │
-│  Password: [______________]         │
-│                                     │
-│  [Cancel]  [Login]                  │
-└─────────────────────────────────────┘
+```mermaid
+graph TD
+    classDef window fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef input fill:#fff,stroke:#999;
+    classDef btn fill:#007bff,color:#fff,font-weight:bold;
+    classDef btnCancel fill:#eee,stroke:#999;
+
+    subgraph Prompt ["Ventana de Navegador"]
+        Title["🔐 Authentication Required"]
+        Desc["Restricted Access"]
+        User["👤 Usuario: [ __________ ]"]
+        Pass["🔑 Contraseña: [ __________ ]"]
+        Login["[ Login ]"]
+        Cancel["[ Cancel ]"]
+    end
+
+    class Prompt window;
+    class User,Pass input;
+    class Login btn;
+    class Cancel btnCancel;
 ```
 
 
@@ -1009,18 +1014,24 @@ trivy image nginx:alpine
 
 **Ejemplo de output**:
 
-```
-nginx:alpine (alpine 3.19.1)
+```mermaid
+graph LR
+    subgraph Trivy ["Reporte de Escaneo: nginx:alpine"]
+        direction TB
+        Summary["Total: 3 (LOW: 1, MEDIUM: 1, HIGH: 1)"]
+        
+        V1["libcrypto3 (CVE-2024-XXXXX)"] 
+        V2["libssl3 (CVE-2024-YYYYY)"]
+        V3["zlib (CVE-2024-ZZZZZ)"]
 
-Total: 3 (UNKNOWN: 0, LOW: 1, MEDIUM: 1, HIGH: 1, CRITICAL: 0)
+        Summary --- V1
+        Summary --- V2
+        Summary --- V3
 
-┌──────────────┬──────────────────┬──────────┬────────────┬───────────────┐
-│   Library    │  Vulnerability   │ Severity │  Installed │ Fixed Version │
-├──────────────┼──────────────────┼──────────┼────────────┼───────────────┤
-│ libcrypto3   │ CVE-2024-XXXXX   │ HIGH     │ 3.1.4-r1   │ 3.1.4-r2      │
-│ libssl3      │ CVE-2024-YYYYY   │ MEDIUM   │ 3.1.4-r1   │ 3.1.4-r2      │
-│ zlib         │ CVE-2024-ZZZZZ   │ LOW      │ 1.3.1-r0   │ 1.3.1-r1      │
-└──────────────┴──────────────────┴──────────┴────────────┴───────────────┘
+        style V1 fill:#f66,stroke:#333,color:#fff
+        style V2 fill:#fb0,stroke:#333
+        style V3 fill:#cfc,stroke:#333
+    end
 ```
 
 **Niveles de severidad**:

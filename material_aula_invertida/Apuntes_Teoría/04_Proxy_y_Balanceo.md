@@ -891,10 +891,10 @@ app.listen(3000, () => {
 });
 ```
 
-
 ---
 
-### 4.10 Caso Real: WordPress + MariaDB + Nginx (Docker Compose)
+
+#### 4.10 Caso Real: WordPress + MariaDB + Nginx (Docker Compose)
 
 Este caso integra todo lo aprendido en los módulos 2 y 4: Docker Compose, proxy inverso, balanceo y persistencia de datos.
 
@@ -1152,9 +1152,6 @@ docker compose down
 # 10. Detener Y eliminar datos (¡CUIDADO!)
 docker compose down -v
 ```
-
-
----
 
 ## Referencias
 
