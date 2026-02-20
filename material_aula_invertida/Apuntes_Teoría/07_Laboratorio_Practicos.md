@@ -10,24 +10,36 @@ Este primer caso es el más completo: combina **balanceo de carga**, **proxy inv
 
 #### Arquitectura
 
-```
+```mermaid
+graph TD
+    Internet((Internet)) --> CF[Cloudflare<br/>DDoS Protection]
+    CF --> LB[Nginx<br/>Load Balancer]
+    
+    subgraph Cluster ["Servidores Web (Nginx + Node.js)"]
+        direction LR
+        S1[Nginx 1<br/>Static] --- A1[Node.js 1<br/>API]
+        S2[Nginx 2<br/>Static] --- A2[Node.js 2<br/>API]
+        S3[Nginx 3<br/>Static] --- A3[Node.js 3<br/>API]
+    end
 
-Internet → Cloudflare (DDoS Protection)
-↓
-Nginx (Load Balancer)
-↓
-┌──────────┼──────────┐
-↓          ↓          ↓
-Nginx1     Nginx2     Nginx3
-(Static)   (Static)   (Static)
-↓          ↓          ↓
-Node.js    Node.js    Node.js
-(API)      (API)      (API)
-↓
-PostgreSQL (Primary)
-↓
-PostgreSQL (Replica)
+    LB --> S1
+    LB --> S2
+    LB --> S3
 
+    A1 --> DB_P
+    A2 --> DB_P
+    A3 --> DB_P
+
+    subgraph Data ["Capa de Datos"]
+        DB_P[(PostgreSQL<br/>Primary)]
+        DB_R[(PostgreSQL<br/>Replica)]
+        Redis[[Redis<br/>Cache]]
+        DB_P --> DB_R
+    end
+
+    A1 -.-> Redis
+    A2 -.-> Redis
+    A3 -.-> Redis
 ```
 
 #### docker-compose.yml
@@ -329,15 +341,19 @@ El caso anterior usaba una arquitectura monolítica (un único backend Node.js r
 
 #### Arquitectura
 
-```
-Internet → Nginx (API Gateway)
-              ↓
-   ┌──────────┼──────────┐
-   ↓          ↓          ↓
-Users API  Products  Orders
-Service    Service   Service
-   ↓          ↓          ↓
-MongoDB   PostgreSQL  MySQL
+```mermaid
+graph TD
+    Internet((Internet)) --> AG[Nginx<br/>API Gateway]
+    
+    AG -->|/api/users| US[Users API<br/>Service]
+    AG -->|/api/products| PS[Products API<br/>Service]
+    AG -->|/api/orders| OS[Orders API<br/>Service]
+    
+    subgraph DBs ["Bases de Datos"]
+        US --> MDB[(MongoDB)]
+        PS --> PG[(PostgreSQL)]
+        OS --> MSL[(MySQL)]
+    end
 ```
 
 

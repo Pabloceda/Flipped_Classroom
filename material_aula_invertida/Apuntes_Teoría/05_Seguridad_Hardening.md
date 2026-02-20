@@ -1014,25 +1014,7 @@ trivy image nginx:alpine
 
 **Ejemplo de output**:
 
-```mermaid
-graph LR
-    subgraph Trivy ["Reporte de Escaneo: nginx:alpine"]
-        direction TB
-        Summary["Total: 3 (LOW: 1, MEDIUM: 1, HIGH: 1)"]
-        
-        V1["libcrypto3 (CVE-2024-XXXXX)"] 
-        V2["libssl3 (CVE-2024-YYYYY)"]
-        V3["zlib (CVE-2024-ZZZZZ)"]
-
-        Summary --- V1
-        Summary --- V2
-        Summary --- V3
-
-        style V1 fill:#f66,stroke:#333,color:#fff
-        style V2 fill:#fb0,stroke:#333
-        style V3 fill:#cfc,stroke:#333
-    end
-```
+![Ejemplo de output real de Trivy](ejemplo_trivy.png)
 
 **Niveles de severidad**:
 
