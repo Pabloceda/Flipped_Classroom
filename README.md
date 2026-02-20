@@ -20,8 +20,8 @@ Ubicado en `material_aula_invertida/`, cubre todo el temario necesario:
 | **03. Nginx Core** | Instalación, Bloques Server/Location, Servir Estáticos y Módulos. |
 | **04. Proxy y Balanceo** | Reverse Proxy, Load Balancing (Round Robin, Least Conn) y Upstreams. |
 | **05. Seguridad Hardening** | SSL/TLS, Certificados, HSTS, Rate Limiting y Headers de Seguridad. |
-| **06. Operaciones y Debug** | Logs, Troubleshooting, Monitorización básica y Roadmap. |
-| **07. Laboratorio** | Guía paso a paso para desplegar un entorno completo WordPress + MariaDB. |
+| **06. Operaciones y Debug** | Logs, Troubleshooting, Monitorización básica y Cierre con Roadmap. |
+| **07. Laboratorio** | Guía paso a paso para desplegar diferentes entornos reales. |
 | **08. Cheat Sheet** | Hoja de referencia rápida con comandos esenciales para el día a día. |
 
 ### 🛠️ 2. Actividades Prácticas
@@ -75,7 +75,7 @@ Para seguir este curso, se recomienda contar con el siguiente software instalado
 
 ## 📝 Estado del Proyecto
 
-✅ **Finalizado**: Todo el material teórico, práctico y de evaluación está completo y revisado para su implementación inmediata en el aula.
+✅ **Finalizado**: Todo el material teórico, práctico y de evaluación está completo y revisado para su uso inmediato en el aula.
 
 ---
 
