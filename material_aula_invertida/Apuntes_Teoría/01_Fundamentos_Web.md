@@ -444,3 +444,39 @@ Ejemplo: 4 cores × 4096 conexiones = 16,384 conexiones simultáneas
 Archivos de configuración legibles y modularizables (no requiere recompilación).
 
 ---
+
+### 1.7 La Administración de Servidores en el Siglo XXI
+
+Tras entender qué es un servidor web y cómo Nginx domina el mercado, surge la pregunta: **¿cómo se gestiona esto en un entorno profesional?** La administración de servidores web ha evolucionado de un proceso artesanal a uno industrial y automatizado.
+
+#### El Ciclo de Vida de la Administración
+
+Un administrador no solo "instala" un servidor; gestiona su ciclo de vida completo:
+
+1.  **Provisión**: Preparar el entorno (Nativo vs. Contenedores).
+2.  **Configuración**: Definir el comportamiento (lo que veremos en el Módulo 3).
+3.  **Seguridad (Hardening)**: Proteger el servicio de ataques (Módulo 5).
+4.  **Optimización**: Ajustar el rendimiento para alta carga (Módulo 4 y 6).
+5.  **Monitorización**: Vigilar que todo siga funcionando (Módulo 7).
+
+#### Despliegue Nativo vs. Contenedores
+
+| Característica | Despliegue Nativo (Tradicional) | Despliegue con Docker (Moderno) |
+| :--- | :--- | :--- |
+| **Instalación** | `apt install nectar` / manual | `docker pull` / instantáneo |
+| **Dependencias** | Compartidas con el SO (riesgo de conflictos) | Aisladas dentro de la imagen |
+| **Portabilidad** | Difícil entre distintos Linux | "Build once, run anywhere" |
+| **Escalado** | Manual y lento | Automatizado y elástico |
+| **Mantenimiento** | Mutable (se cambia el servidor "vivo") | Inmutable (se reemplaza la imagen) |
+
+> **Conclusión**: En este curso utilizaremos **Docker** porque es el estándar que permite aplicar todos los conceptos de este módulo de forma rápida, segura y profesional.
+
+#### Los Tres Pilares del Administrador
+
+Todo lo que aprenderás a partir de aquí se apoya en tres objetivos fundamentales:
+
+*   **Disponibilidad**: Que el sitio web nunca deje de funcionar (Balanceo, Health Checks).
+*   **Rendimiento**: Que el sitio cargue lo más rápido posible (Caché, Compresión, HTTP/3).
+*   **Seguridad**: Que los datos y el servidor estén protegidos (SSL, HSTS, WAF).
+
+---
